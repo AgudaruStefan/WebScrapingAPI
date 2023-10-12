@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Scraping Interface</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="container mx-auto p-4 bg-white shadow-lg rounded-lg">
+        <h1 class="text-2xl font-bold mb-4">Web Scraping Interface</h1>
+        <div class="mb-4">
+            <label for="url" class="block text-gray-700 font-semibold mb-2">Enter URL:</label>
+            <input
+                class="border rounded-lg px-3 py-2 w-full"
+                type="text"
+                id="url"
+                placeholder="https://example.com"
+            />
+        </div>
+        <div class="mb-4">
+            <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg" id="scrapeButton">
+                Scrape
+            </button>
+        </div>
+        <div id="result" class="hidden">
+            <h2 class="text-xl font-semibold mb-2">Results:</h2>
+            <pre id="scrapedData" class="border p-4 rounded-lg">
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('scrapeButton').addEventListener('click', async () => {
+            const url = document.getElementById('url').value;
+            const response = await fetch(`/scraper/${url}`);
+            if (response.status === 200) {
+                const data = await response.json();
+                document.getElementById('result').classList.remove('hidden');
+                document.getElementById('scrapedData').textContent = JSON.stringify(data, null, 2);
+            }
+        });
+    </script>
+</body>
+</html>
