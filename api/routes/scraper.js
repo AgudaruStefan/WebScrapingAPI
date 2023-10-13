@@ -135,9 +135,6 @@ async function scrape(URL) {
 
 router.get('/:url', async (req, res, next) => {
   const url = req.params.url;
-  if (url[0,7] === "https://"){
-    url = url[8,-1,1]
-  }
   res.status(200).json({
       WebScrapingAPI: await scrape(`https://${url}`)
   });

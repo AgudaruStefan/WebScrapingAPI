@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Scraping Interface</title>
+    <title>Web Scraping</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 p-4">
     <div class="container mx-auto p-4 bg-white shadow-lg rounded-lg">
-        <h1 class="text-2xl font-bold mb-4">Web Scraping Interface</h1>
+        <h1 class="text-2xl font-semibold mb-4 flex justify-center items-center text-black-500">Web Scraping API</h1>
         <div class="mb-4">
             <label for="url" class="block text-gray-700 font-semibold mb-2">Enter URL:</label>
             <input
                 class="border rounded-lg px-3 py-2 w-full"
                 type="text"
                 id="url"
-                placeholder="https://example.com"
+                placeholder="https://www.webscrapingapi.com/"
             />
+            <div id="error" class="text-red-500 text-sm hidden">Invalid URL format. Please enter a valid URL.</div>
         </div>
         <div class="mb-4">
             <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg" id="scrapeButton">
@@ -32,9 +33,34 @@
 
     <script>
         document.getElementById('scrapeButton').addEventListener('click', async () => {
-            const url = document.getElementById('url').value;
-            const response = await fetch(`/scraper/${url}`);
-            if (response.status === 200) {
+            let url = document.getElementById('url').value;
+            let short_url = url;
+            if (!url.trim()) {
+
+                document.getElementById('error').textContent = 'Please enter a valid URL.';
+                document.getElementById('error').classList.remove('hidden');
+                return;
+            }
+            if (url.startsWith('http://') || url.startsWith('https://')) {
+                short_url = url.split('//')[1];
+            } else {
+
+                document.getElementById('error').textContent = 'Invalid URL format. Please enter a valid URL.';
+                document.getElementById('error').classList.remove('hidden');
+                return;
+            }
+
+
+            document.getElementById('error').classList.add('hidden');
+
+            const response = await fetch(`/scraper/${short_url}`)
+                .catch((error) => {
+
+                    document.getElementById('error').textContent = 'An error occurred. Please check your internet connection.';
+                    document.getElementById('error').classList.remove('hidden');
+                });
+
+            if (response && response.status === 200) {
                 const data = await response.json();
                 document.getElementById('result').classList.remove('hidden');
                 document.getElementById('scrapedData').textContent = JSON.stringify(data, null, 2);
@@ -43,3 +69,5 @@
     </script>
 </body>
 </html>
+
+
