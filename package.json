@@ -10,8 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
-    "puppeteer": "^21.3.8",
-    "slice": "^1.0.0",
-    "slice.js": "^1.1.1"
+    "puppeteer": "^21.3.8"
   }
 }
